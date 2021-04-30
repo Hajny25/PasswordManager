@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_manager/registerPage.dart';
-import 'Firebase/authExceptionHandler.dart';
-import 'Firebase/authentication.dart';
-import 'encryption/User.dart';
-import 'userMenu/userMenu.dart'; // Text
+import 'package:password_manager/Login/registerPage.dart';
+import '../Firebase/authExceptionHandler.dart';
+import '../Firebase/authentication.dart';
+import '../encryption/User.dart';
+import '../userMenu/userMenu.dart'; // Text
 
 class LoginPage extends StatefulWidget {
   @override

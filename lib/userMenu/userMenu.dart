@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/Firebase/authentication.dart';
 import 'package:password_manager/Firebase/database.dart';
-import 'package:password_manager/userMenu/generator.dart';
+import 'package:password_manager/userMenu/generatorPage.dart';
 import 'package:password_manager/themes/colors.dart';
 import 'package:password_manager/userMenu/vaultPage.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';

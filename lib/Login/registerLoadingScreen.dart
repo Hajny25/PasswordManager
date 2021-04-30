@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:password_manager/registerPage.dart';
+import 'package:password_manager/Login/registerPage.dart';
 import 'package:password_manager/userMenu/userMenu.dart';
 
 class RegisterLoadingScreen extends StatefulWidget {

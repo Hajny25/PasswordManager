@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_manager/registerPage.dart';
+import 'package:password_manager/Login/registerPage.dart';
 import 'package:password_manager/themes/darkTheme.dart';
 import 'package:password_manager/userMenu/userMenu.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'loginPage.dart';
+import 'Login/loginPage.dart';
 import 'globals.dart' as Globals;
 
 final navigatorKey = GlobalKey<NavigatorState>();

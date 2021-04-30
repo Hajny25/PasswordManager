@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_manager/loginPage.dart';
-import 'Firebase/authExceptionHandler.dart';
-import 'Firebase/authentication.dart';
-import 'Firebase/database.dart';
-import 'encryption/User.dart';
-import 'userMenu/userMenu.dart'; // Text
+import 'package:password_manager/Login/loginPage.dart';
+import '../Firebase/authExceptionHandler.dart';
+import '../Firebase/authentication.dart';
+import '../Firebase/database.dart';
+import '../encryption/User.dart';
+import '../userMenu/userMenu.dart'; // Text
 
 class RegisterPage extends StatefulWidget {
   @override
