@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/Firebase/authentication.dart';
@@ -50,8 +51,9 @@ class _UserMenuState extends State<UserMenu> {
   List<String> tabNames = ["My Vault", "Favorites", "Generate Password"];
   List<Website>
       unusedWebsitesList; // for adding new entries, as fab is in this widget
-  WebsiteListNotifier websiteListNotifier;
-  WebsiteListNotifier unusedWebsiteListNotifier;
+  UsedWebsiteListNotifier websiteListNotifier = UsedWebsiteListNotifier([]);
+  UsedWebsiteListNotifier favoritesListNotifier = UsedWebsiteListNotifier([]);
+  UnusedWebsiteListNotifier unusedWebsiteListNotifier = UnusedWebsiteListNotifier([]);
 
   void updateTab(int newIndex) {
     setState(() {
@@ -66,9 +68,15 @@ class _UserMenuState extends State<UserMenu> {
   }
 
   void setWebsiteListNotifiers(
-      List<UserWebsite> userWebsites, List<Website> unusedWebsites) {
-    this.websiteListNotifier = WebsiteListNotifier(userWebsites);
-    this.unusedWebsiteListNotifier = WebsiteListNotifier(unusedWebsites);
+      List<UserWebsite> websiteList, List<Website> unusedWebsiteList) {
+    websiteListNotifier.value = websiteList;
+    favoritesListNotifier.value =
+        websiteList.where((element) => element.isFavorite == true).toList();
+    unusedWebsiteListNotifier.value = unusedWebsiteList;
+    print("Notifier Setter");
+    print(websiteListNotifier.value);
+    print(favoritesListNotifier.value);
+    print(unusedWebsiteListNotifier.value);
   }
 
   void setUnusedWebsites(List<Website> websiteList) {
@@ -79,28 +87,43 @@ class _UserMenuState extends State<UserMenu> {
   Widget build(BuildContext context) {
     final _currentName = this.tabNames[this._currentIndex];
 
-    return Provider(
-      create: (_) => FirebaseAuthHelper().getCurrentUser(),
-      child: Container(
-          color: MyColors.barDark,
-          child: SafeArea(
-            child: Scaffold(
-                backgroundColor: MyColors.backgroundDark,
-                appBar: AppBar(
-                    backgroundColor: MyColors.barDark,
-                    centerTitle: true,
-                    title: Text(
-                      _currentName,
-                      style: Theme.of(context).textTheme.headline6,
-                    )),
-                bottomNavigationBar:
-                    NavigationBar(this._currentIndex, updateTab),
-                floatingActionButton: isLoaded && _currentIndex == 0
-                    ? floatingActionButton(context, unusedWebsitesList)
-                    : null,
-                body: UserMenuBody(widget.user, this._currentIndex, setIsLoaded,
-                    setUnusedWebsites, setWebsiteListNotifiers)),
-          )),
+    return
+        // MultiProvider(
+        //   providers: [
+        //     // ChangeNotifierProvider<User>(
+        //     //     create: (_) => FirebaseAuthHelper().getCurrentUser()),
+        //     ChangeNotifierProvider<UsedWebsiteListNotifier>(
+        //         create: (_) => UsedWebsiteListNotifier([])),
+        //     ChangeNotifierProvider<UnusedWebsiteListNotifier>(
+        //         create: (_) => UnusedWebsiteListNotifier([Website("sample", 0)]))
+        //   ],
+        //   child:
+        Container(
+      color: MyColors.barDark,
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: MyColors.backgroundDark,
+            appBar: AppBar(
+                backgroundColor: MyColors.barDark,
+                centerTitle: true,
+                title: Text(
+                  _currentName,
+                  style: Theme.of(context).textTheme.headline6,
+                )),
+            bottomNavigationBar: NavigationBar(this._currentIndex, updateTab),
+            floatingActionButton: isLoaded && _currentIndex == 0
+                ? floatingActionButton(context, unusedWebsiteListNotifier)
+                : null,
+            body: UserMenuBody(
+                widget.user,
+                this._currentIndex,
+                this.websiteListNotifier,
+                this.favoritesListNotifier,
+                this.unusedWebsiteListNotifier,
+                this.setIsLoaded,
+                setUnusedWebsites,
+                this.setWebsiteListNotifiers)),
+      ),
     );
   }
 }
@@ -108,11 +131,21 @@ class _UserMenuState extends State<UserMenu> {
 class UserMenuBody extends StatefulWidget {
   final user;
   final int currentIndex;
+  final UsedWebsiteListNotifier websiteListNotifier;
+  final UsedWebsiteListNotifier favoritesListNotifier;
+  final UnusedWebsiteListNotifier unusedWebsiteListNotifier;
   final Function isLoadedSetter;
   final Function unusedWebsitesSetter;
   final Function setWebsiteNotifiers;
-  UserMenuBody(this.user, this.currentIndex, this.isLoadedSetter,
-      this.unusedWebsitesSetter, this.setWebsiteNotifiers);
+  UserMenuBody(
+      this.user,
+      this.currentIndex,
+      this.websiteListNotifier,
+      this.favoritesListNotifier,
+      this.unusedWebsiteListNotifier,
+      this.isLoadedSetter,
+      this.unusedWebsitesSetter,
+      this.setWebsiteNotifiers);
 
   @override
   _UserMenuBodyState createState() => _UserMenuBodyState();
@@ -128,28 +161,35 @@ class _UserMenuBodyState extends State<UserMenuBody> {
   void initState() {
     this._future = fetchData();
     this.tabs = {
-      "My Vault": () => VaultPage(this.websiteList),
-      "Favorites": () => FavoritesPage(this.favoriteWebsiteList),
+      "My Vault": () => VaultPage(this.widget.websiteListNotifier),
+      "Favorites": () => FavoritesPage(this.widget.favoritesListNotifier),
       "Password Generator": () => GeneratorPage()
     };
     super.initState();
   }
 
   Future<void> fetchData() async {
-    print("Entered");
     this.websiteList = await getUsedWebsites(widget.user);
-    print("Checkpoint 1: ${this.websiteList}");
     final unusedWebsitesList = await getUnusedWebsites(widget.user);
     this.widget.unusedWebsitesSetter(unusedWebsitesList);
-    print("Checkpoint 2");
     this.favoriteWebsiteList = getFavorites();
-    print("Updating tabs...");
-    print("WebsiteList: ${this.websiteList}");
-    print("unusedWebsites: $unusedWebsitesList");
     this.widget.isLoadedSetter();
-    this.widget.setWebsiteNotifiers(this.websiteList, this.favoriteWebsiteList);
+    //print("Going to set");
+    //this.setWebsiteListNotifiers(this.websiteList, this.favoriteWebsiteList);
+    //print("Notifiers:");
+    //print(Provider.of<UnusedWebsiteListNotifier>(context).value);
+    this.widget.setWebsiteNotifiers(this.websiteList, unusedWebsitesList);
     print("Fetching data completed.");
   }
+
+  // void setWebsiteListNotifiers(
+  //     List<UserWebsite> usedWebsites, List<Website> unusedWebsites) {
+  //   print("Entered setter");
+  //   print(Provider.of<UnusedWebsiteListNotifier>(context).value);
+  //   Provider.of<UsedWebsiteListNotifier>(context).value = usedWebsites;
+  //   print("First checkpoint");
+  //   Provider.of<UnusedWebsiteListNotifier>(context).value = unusedWebsites;
+  // }
 
   void updateWebsites(UserWebsite website) {
     setState(() {
@@ -167,13 +207,18 @@ class _UserMenuBodyState extends State<UserMenuBody> {
 
   @override
   Widget build(BuildContext context) {
+    // print("Test: ${Provider.of<UnusedWebsiteListNotifier>(context).value[0].websiteName}");
+
     return FutureBuilder(
       future: _future,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         List<Widget> children;
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done) {//} && snapshot.data != null) {
+          print(snapshot.data == null);
           Widget currentTab =
               this.tabs.values.toList()[this.widget.currentIndex]();
+          print("build?");
+          print(snapshot.data);
           return currentTab;
           // ScaffoldMessenger.of(context)
           //     .showSnackBar(SnackBar(content: Text("Logged in."))); // TODO snackbar after login?

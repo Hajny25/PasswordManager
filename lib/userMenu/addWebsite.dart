@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:password_manager/Firebase/authentication.dart';
 import 'package:password_manager/Firebase/database.dart';
 import 'package:password_manager/passwordGenerator.dart';
+import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 import 'package:password_manager/cupertinoHelpers.dart';
 
 class AddWebsitePopUp extends StatefulWidget {
-  final List<Website> websiteList;
-  AddWebsitePopUp(this.websiteList);
+  final UnusedWebsiteListNotifier unusedWebsiteListNotifier;
+  AddWebsitePopUp(this.unusedWebsiteListNotifier);
   @override
   _AddWebsitePopUpState createState() => _AddWebsitePopUpState();
 }
@@ -23,7 +24,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
 
   @override
   void initState() {
-    this.websitesToDisplay = this.widget.websiteList;
+    this.websitesToDisplay = this.widget.unusedWebsiteListNotifier.value;
     super.initState();
   }
 
@@ -33,98 +34,99 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: CupertinoAlertDialog(
-      title: Text("Add website"),
-      content: Column(children: [
-        Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: CupertinoSearchTextField(
-              onChanged: (text) {
-                setState(() {
-                  websitesToDisplay = this
-                      .widget
-                      .websiteList
-                      .where((element) => element.websiteName
-                          .toLowerCase()
-                          .contains(text.toLowerCase()))
-                      .toList();
-                });
-              },
-            )),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Container(
-            height: 200,
-            width: 300,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            child: CupertinoPicker.builder(
-              scrollController: scrollController,
-              diameterRatio: 2,
-              backgroundColor: Colors.black,
-              childCount: this.websitesToDisplay.length,
-              itemExtent: 40,
-              onSelectedItemChanged: (index) {}, // intended, no change needed
-              itemBuilder: (context, index) {
-                var website = this.websitesToDisplay[index];
-                return Center(
-                    child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 30, right: 8),
-                      child: website.getImage(width: 30, height: 30),
-                    ),
-                    Text(
-                      website.websiteName,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ));
-              },
+    return ValueListenableBuilder(
+      valueListenable: this.widget.unusedWebsiteListNotifier,
+      builder: (context, notifier, child) => SafeArea(
+          child: CupertinoAlertDialog(
+        title: Text("Add website"),
+        content: Column(children: [
+          Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: CupertinoSearchTextField(
+                onChanged: (text) {
+                  setState(() {
+                    websitesToDisplay = notifier.value
+                        .where((element) => element.websiteName
+                            .toLowerCase()
+                            .contains(text.toLowerCase()))
+                        .toList();
+                  });
+                },
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Container(
+              height: 200,
+              width: 300,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: CupertinoPicker.builder(
+                scrollController: scrollController,
+                diameterRatio: 2,
+                backgroundColor: Colors.black,
+                childCount: this.websitesToDisplay.length,
+                itemExtent: 40,
+                onSelectedItemChanged: (index) {}, // intended, no change needed
+                itemBuilder: (context, index) {
+                  var website = this.websitesToDisplay[index];
+                  return Center(
+                      child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 8),
+                        child: website.getImage(width: 30, height: 30),
+                      ),
+                      Text(
+                        website.websiteName,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ));
+                },
+              ),
             ),
           ),
-        ),
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Your username:",
-                    style: Theme.of(context).textTheme.bodyText1))),
-        cupertinoTextField(context, usernameController,
-            CupertinoIcons.person_alt_circle_fill, "Username"),
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Your password:",
-                    style: Theme.of(context).textTheme.bodyText1))),
-        cupertinoTextField(context, passwordController,
-            CupertinoIcons.lock_circle_fill, "Password"),
-        CupertinoButton(
-          child: Text("Generate Password"),
-          onPressed: () {
-            String password = getPassword(20);
-            setState(() {
-              passwordController.text = password;
-            });
-          },
-        )
-      ]),
-      actions: [
-        CupertinoDialogAction(
-          child: Text("Cancel", style: Theme.of(context).textTheme.bodyText1),
-          isDestructiveAction: true,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CupertinoDialogAction(
-            child:
-                Text("Confirm", style: Theme.of(context).textTheme.bodyText1),
-            isDefaultAction: true,
-            onPressed: onConfirm),
-      ],
-    ));
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Your username:",
+                      style: Theme.of(context).textTheme.bodyText1))),
+          cupertinoTextField(context, usernameController,
+              CupertinoIcons.person_alt_circle_fill, "Username"),
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Your password:",
+                      style: Theme.of(context).textTheme.bodyText1))),
+          cupertinoTextField(context, passwordController,
+              CupertinoIcons.lock_circle_fill, "Password"),
+          CupertinoButton(
+            child: Text("Generate Password"),
+            onPressed: () {
+              String password = getPassword(20);
+              setState(() {
+                passwordController.text = password;
+              });
+            },
+          )
+        ]),
+        actions: [
+          CupertinoDialogAction(
+            child: Text("Cancel", style: Theme.of(context).textTheme.bodyText1),
+            isDestructiveAction: true,
+            onPressed: () => Navigator.pop(context),
+          ),
+          CupertinoDialogAction(
+              child:
+                  Text("Confirm", style: Theme.of(context).textTheme.bodyText1),
+              isDefaultAction: true,
+              onPressed: onConfirm),
+        ],
+      )),
+    );
   }
 
   void onConfirm() {

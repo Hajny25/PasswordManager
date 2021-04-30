@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:password_manager/userMenu/websiteListWidget.dart';
+import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 
 class FavoritesPage extends StatefulWidget {
-  final List<UserWebsite> favorites;
+  final UsedWebsiteListNotifier favoritesNotifier;
 
-  FavoritesPage(this.favorites);
+  FavoritesPage(this.favoritesNotifier);
 
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
@@ -14,6 +15,6 @@ class FavoritesPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
-    return WebsiteList(this.widget.favorites);
+    return WebsiteList(this.widget.favoritesNotifier);
   }
 }

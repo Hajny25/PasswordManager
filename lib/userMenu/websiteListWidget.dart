@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:password_manager/themes/colors.dart';
+import 'package:password_manager/userMenu/websiteNotifier.dart';
 
 import '../websites.dart';
 import 'websiteCloseUp.dart';
 
 class WebsiteList extends StatefulWidget {
-  final List<UserWebsite> websiteList;
-  WebsiteList(this.websiteList);
+  final WebsiteListNotifier websiteListNotifier;
+  WebsiteList(this.websiteListNotifier);
 
   @override
   _WebsiteListState createState() => _WebsiteListState();
@@ -20,46 +21,46 @@ class _WebsiteListState extends State<WebsiteList> {
 
   @override
   void initState() {
-    print("Is null: ${this.widget.websiteList}");
-    this.websitesToDisplay = this.widget.websiteList;
+    print("WebsiteList: ${this.widget.websiteListNotifier}");
+    this.websitesToDisplay = this.widget.websiteListNotifier.value;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      isAlwaysShown: false,
-      child: CustomScrollView(slivers: <Widget>[
-        SliverAppBar(
-            backgroundColor: MyColors.backgroundDark,
-            pinned: false,
-            floating: true,
-            snap: false,
-            title: Container(color: Colors.orange),
-            flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.symmetric(horizontal: 20),
-                centerTitle: true,
-                title: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CupertinoSearchTextField(onChanged: (text) {
-                      setState(() {
-                        this.websitesToDisplay = this
-                            .widget
-                            .websiteList
-                            .where((element) => element.websiteName
-                                .toLowerCase()
-                                .contains(text.toLowerCase()))
-                            .toList();
-                      });
-                    })))),
-        if (this.widget.websiteList.isEmpty)
-          _websiteEmpty()
-        else if (websitesToDisplay.isEmpty)
-          _noSearchResults()
-        else
-          _websiteBody()
-      ]),
-    );
+    return ValueListenableBuilder(
+        valueListenable: this.widget.websiteListNotifier,
+        builder: (context, websiteList, widget) => Scrollbar(
+              isAlwaysShown: false,
+              child: CustomScrollView(slivers: <Widget>[
+                SliverAppBar(
+                    backgroundColor: MyColors.backgroundDark,
+                    pinned: false,
+                    floating: true,
+                    snap: false,
+                    title: Container(color: Colors.orange),
+                    flexibleSpace: FlexibleSpaceBar(
+                        titlePadding: EdgeInsets.symmetric(horizontal: 20),
+                        centerTitle: true,
+                        title: Align(
+                            alignment: Alignment.centerLeft,
+                            child: CupertinoSearchTextField(onChanged: (text) {
+                              setState(() {
+                                this.websitesToDisplay = websiteList
+                                    .where((element) => element.websiteName
+                                        .toLowerCase()
+                                        .contains(text.toLowerCase()))
+                                    .toList();
+                              });
+                            })))),
+                if (websiteList.isEmpty)
+                  _websiteEmpty()
+                else if (websitesToDisplay.isEmpty)
+                  _noSearchResults()
+                else
+                  _websiteBody()
+              ]),
+            ));
   }
 
   Widget _websiteBody() {

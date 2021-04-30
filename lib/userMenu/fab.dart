@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/userMenu/websiteNotifier.dart';
 
 import '../websites.dart';
 import 'addWebsite.dart';
 
-Widget floatingActionButton(BuildContext context, List<Website> websiteList) {
+Widget floatingActionButton(BuildContext context, UnusedWebsiteListNotifier unusedWebsiteListNotifier) {
   return SizedBox(
       width: 120,
       child: FloatingActionButton(
@@ -24,7 +25,7 @@ Widget floatingActionButton(BuildContext context, List<Website> websiteList) {
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (context) => AddWebsitePopUp(websiteList));
+                builder: (context) => AddWebsitePopUp(unusedWebsiteListNotifier));
           })
       );
 }
