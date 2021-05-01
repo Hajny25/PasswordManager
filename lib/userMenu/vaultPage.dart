@@ -17,6 +17,6 @@ class _VaultPageState extends State<VaultPage> {
     List<UserWebsite> websiteList =
         Provider.of<UsedWebsiteListNotifier>(context).value;
     print("Vault Build: $websiteList");
-    return WebsiteList(websiteList);
+    return WebsiteList(websiteList, "vault");
   }
 }

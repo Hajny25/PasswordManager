@@ -11,7 +11,7 @@ class WebsiteListNotifier extends ValueNotifier<List<Website>> {
     notifyListeners();
   }
 
-  void deleteWebsite(Website website) {
+  void removeWebsite(Website website) {
     this.list.remove(website);
     notifyListeners();
   }

@@ -4,13 +4,15 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:password_manager/themes/colors.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';
+import 'package:provider/provider.dart';
 
 import '../websites.dart';
 import 'websiteCloseUp.dart';
 
 class WebsiteList extends StatefulWidget {
   final List<UserWebsite> websiteList;
-  WebsiteList(this.websiteList);
+  final String page; // to identify whether vault or favorite page
+  WebsiteList(this.websiteList, this.page);
 
   @override
   _WebsiteListState createState() => _WebsiteListState();
@@ -29,36 +31,38 @@ class _WebsiteListState extends State<WebsiteList> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-              isAlwaysShown: false,
-              child: CustomScrollView(slivers: <Widget>[
-                SliverAppBar(
-                    backgroundColor: MyColors.backgroundDark,
-                    pinned: false,
-                    floating: true,
-                    snap: false,
-                    title: Container(color: Colors.orange),
-                    flexibleSpace: FlexibleSpaceBar(
-                        titlePadding: EdgeInsets.symmetric(horizontal: 20),
-                        centerTitle: true,
-                        title: Align(
-                            alignment: Alignment.centerLeft,
-                            child: CupertinoSearchTextField(onChanged: (text) {
-                              setState(() {
-                                this.websitesToDisplay = this.widget.websiteList
-                                    .where((element) => element.websiteName
-                                        .toLowerCase()
-                                        .contains(text.toLowerCase()))
-                                    .toList();
-                              });
-                            })))),
-                if (this.widget.websiteList.isEmpty)
-                  _websiteEmpty()
-                else if (websitesToDisplay.isEmpty)
-                  _noSearchResults()
-                else
-                  _websiteBody()
-              ]),
-            );
+      isAlwaysShown: false,
+      child: CustomScrollView(slivers: <Widget>[
+        SliverAppBar(
+            backgroundColor: MyColors.backgroundDark,
+            pinned: false,
+            floating: true,
+            snap: false,
+            title: Container(color: Colors.orange),
+            flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.symmetric(horizontal: 20),
+                centerTitle: true,
+                title: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CupertinoSearchTextField(onChanged: (text) {
+                      setState(() {
+                        this.websitesToDisplay = this
+                            .widget
+                            .websiteList
+                            .where((element) => element.websiteName
+                                .toLowerCase()
+                                .contains(text.toLowerCase()))
+                            .toList();
+                      });
+                    })))),
+        if (this.widget.websiteList.isEmpty)
+          _websiteEmpty()
+        else if (websitesToDisplay.isEmpty)
+          _noSearchResults()
+        else
+          _websiteBody()
+      ]),
+    );
   }
 
   Widget _websiteBody() {
@@ -78,8 +82,9 @@ class _WebsiteListState extends State<WebsiteList> {
             onTap: () {
               setState(() {
                 website.toggleFavorite();
-                this.websitesToDisplay.remove(website);
-                //this.widget.websiteList
+                if (!website.isFavorite) {
+                  this.websitesToDisplay.remove(website);
+                }
               });
               print(website.isFavorite);
             },
@@ -129,9 +134,10 @@ class _WebsiteListState extends State<WebsiteList> {
   }
 
   Widget _websiteEmpty() {
+    String emptyText = this.widget.page == "vault"? "This looks empty.\n Start by adding a new website!" : "You haven't added any favorites yet.";
     return SliverFillRemaining(
         child: Center(
-            child: Text("This looks empty.\n Start by adding a new website!",
+            child: Text(emptyText,
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme

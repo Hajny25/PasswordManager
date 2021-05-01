@@ -19,6 +19,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
     List<UserWebsite> favoritesList = websiteList
       .where((element) => element.isFavorite)
       .toList();
-    return WebsiteList(favoritesList);
+    return WebsiteList(favoritesList, "favorite");
   }
 }
