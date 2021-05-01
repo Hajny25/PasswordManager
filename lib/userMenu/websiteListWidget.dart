@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:password_manager/Firebase/database.dart' as database;
 import 'package:password_manager/themes/colors.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:provider/provider.dart';
@@ -82,7 +83,8 @@ class _WebsiteListState extends State<WebsiteList> {
             onTap: () {
               setState(() {
                 website.toggleFavorite();
-                if (!website.isFavorite) {
+                database.updateIsFavorite(website);
+                if (this.widget.page != "vault") {
                   this.websitesToDisplay.remove(website);
                 }
               });
@@ -134,7 +136,9 @@ class _WebsiteListState extends State<WebsiteList> {
   }
 
   Widget _websiteEmpty() {
-    String emptyText = this.widget.page == "vault"? "This looks empty.\n Start by adding a new website!" : "You haven't added any favorites yet.";
+    String emptyText = this.widget.page == "vault"
+        ? "This looks empty.\n Start by adding a new website!"
+        : "You haven't added any favorites yet.";
     return SliverFillRemaining(
         child: Center(
             child: Text(emptyText,

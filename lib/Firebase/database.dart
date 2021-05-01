@@ -35,10 +35,9 @@ void addGlobalWebsites() {
 //   List<Website> websitesList = [];
 //   if (collectionName != "unused") {
 //     fields.addAll(["username", "password", "isFavorite"]);
-//   } 
+//   }
 //   print(fields);
 
-  
 //   final websiteCollection = await FirebaseFirestore.instance
 //       .collection("users/")
 //       .doc(user.uid)
@@ -115,7 +114,8 @@ void addWebsitePassword(
   deleteWebsiteEntry(user, "unused", website.websiteName);
 }
 
-void addToFavorites(User user, UserWebsite website) {
+void updateIsFavorite(UserWebsite website) {
+  final user = FirebaseAuthHelper().getCurrentUser();
   updateField(user, website, "isFavorite", website.isFavorite);
 }
 
@@ -157,7 +157,7 @@ void updateField(
       .collection("passwords")
       .where("websiteName", isEqualTo: website.websiteName)
       .get();
-  doc.docs.first.reference.set(updateData);
+  doc.docs.first.reference.update(updateData);
 }
 
 void changeUsername(User user, UserWebsite website, String value) {
