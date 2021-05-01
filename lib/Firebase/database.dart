@@ -30,39 +30,69 @@ void addGlobalWebsites() {
   }
 }
 
-Future<List<Website>> getUserWebsites(User user, String collectionName) async {
-  List<String> fields = ["websiteName", "update"];
-  if (collectionName != "unused") {
-    fields.addAll(["username", "password", "isFavorite"]);
-  }
+// Future<List<Website>> getUserWebsites(User user, String collectionName) async {
+//   List<String> fields = ["websiteName", "update"];
+//   List<Website> websitesList = [];
+//   if (collectionName != "unused") {
+//     fields.addAll(["username", "password", "isFavorite"]);
+//   } 
+//   print(fields);
 
-  List<Website> websitesList = [];
-  final websiteCollection = await FirebaseFirestore.instance
-      .collection("users/")
-      .doc(user.uid)
-      .collection(collectionName)
-      .get();
+  
+//   final websiteCollection = await FirebaseFirestore.instance
+//       .collection("users/")
+//       .doc(user.uid)
+//       .collection(collectionName)
+//       .get();
 
-  websiteCollection.docs.forEach((doc) {
-    Map<String, dynamic> argsMap = {};
-    fields.forEach((field) {
-      argsMap[field] = doc[field];
-    });
-    var website = (collectionName != "unused")
-        ? UserWebsite.fromMap(argsMap)
-        : Website.fromMap(argsMap);
-    websitesList.add(website);
-  });
-  return websitesList;
-}
+//   websiteCollection.docs.forEach((doc) {
+//     Map<String, dynamic> argsMap = {};
+//     fields.forEach((field) {
+//       argsMap[field] = doc[field];
+//     });
+//     print(argsMap);
+//     var website = (collectionName != "unused")
+//         ? UserWebsite.fromMap(argsMap)
+//         : Website.fromMap(argsMap);
+//     websitesList.add(website);
+//   });
+//   print("general $websitesList");
+//   return websitesList;
+// }
 
 Future<List<UserWebsite>> getUsedWebsites(User user) async {
-  List<UserWebsite> websitesList = await getUserWebsites(user, "passwords");
+  List<UserWebsite> websitesList = [];
+  final unusedWebsitesCollection = await FirebaseFirestore.instance
+      .collection("users/")
+      .doc(user.uid)
+      .collection("passwords")
+      .get();
+  final docs = unusedWebsitesCollection.docs;
+  for (var doc in docs) {
+    final websiteName = doc["websiteName"];
+    final update = doc["update"];
+    final username = doc["username"];
+    final password = doc["password"];
+    final isFavorite = doc["isFavorite"];
+    websitesList
+        .add(UserWebsite(websiteName, update, username, password, isFavorite));
+  }
   return websitesList;
 }
 
 Future<List<Website>> getUnusedWebsites(User user) async {
-  List<Website> websitesList = await getUserWebsites(user, "unused");
+  List<Website> websitesList = [];
+  final unusedWebsitesCollection = await FirebaseFirestore.instance
+      .collection("users/")
+      .doc(user.uid)
+      .collection("unused")
+      .get();
+  final docs = unusedWebsitesCollection.docs;
+  for (var doc in docs) {
+    final websiteName = doc["websiteName"];
+    final update = doc["update"];
+    websitesList.add(Website(websiteName, update));
+  }
   return websitesList;
 }
 

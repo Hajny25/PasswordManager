@@ -50,8 +50,6 @@ class _UserMenuState extends State<UserMenu> {
   int _currentIndex = 0;
   List<String> tabNames = ["My Vault", "Favorites", "Generate Password"];
 
-
-
   void updateTab(int newIndex) {
     setState(() {
       this._currentIndex = newIndex;
@@ -63,7 +61,6 @@ class _UserMenuState extends State<UserMenu> {
       this.isLoaded = true;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,27 +74,27 @@ class _UserMenuState extends State<UserMenu> {
         //     create: (_) => UnusedWebsiteListNotifier([Website("sample", 0)]))
 
         builder: (context, _) => Container(
-              color: MyColors.barDark,
-              child: SafeArea(
-                child: Scaffold(
-                    backgroundColor: MyColors.backgroundDark,
-                    appBar: AppBar(
-                        backgroundColor: MyColors.barDark,
-                        centerTitle: true,
-                        title: Text(
-                          _currentName,
-                          style: Theme.of(context).textTheme.headline6,
-                        )),
-                    bottomNavigationBar:
-                        NavigationBar(this._currentIndex, updateTab),
-                    floatingActionButton: isLoaded && _currentIndex == 0
-                        ? floatingActionButton(context)
-                        : null,
-                    body: UserMenuBody(
-                        widget.user,
-                        this._currentIndex,
-                        this.setIsLoaded,
-                        ),
+            color: MyColors.barDark,
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: MyColors.backgroundDark,
+                appBar: AppBar(
+                    backgroundColor: MyColors.barDark,
+                    centerTitle: true,
+                    title: Text(
+                      _currentName,
+                      style: Theme.of(context).textTheme.headline6,
+                    )),
+                bottomNavigationBar:
+                    NavigationBar(this._currentIndex, updateTab),
+                floatingActionButton: isLoaded && _currentIndex == 0
+                    ? floatingActionButton(context)
+                    : null,
+                body: UserMenuBody(
+                  widget.user,
+                  this._currentIndex,
+                  this.setIsLoaded,
+                ),
               ),
             )));
   }
