@@ -4,7 +4,7 @@ import 'package:password_manager/userMenu/websiteNotifier.dart';
 import '../websites.dart';
 import 'addWebsite.dart';
 
-Widget floatingActionButton(BuildContext context, UnusedWebsiteListNotifier unusedWebsiteListNotifier) {
+Widget floatingActionButton(BuildContext context) {
   return SizedBox(
       width: 120,
       child: FloatingActionButton(
@@ -25,7 +25,7 @@ Widget floatingActionButton(BuildContext context, UnusedWebsiteListNotifier unus
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (context) => AddWebsitePopUp(unusedWebsiteListNotifier));
+                builder: (context) => AddWebsitePopUp());
           })
       );
 }

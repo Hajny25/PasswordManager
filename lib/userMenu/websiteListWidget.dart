@@ -9,8 +9,8 @@ import '../websites.dart';
 import 'websiteCloseUp.dart';
 
 class WebsiteList extends StatefulWidget {
-  final WebsiteListNotifier websiteListNotifier;
-  WebsiteList(this.websiteListNotifier);
+  final List<UserWebsite> websiteList;
+  WebsiteList(this.websiteList);
 
   @override
   _WebsiteListState createState() => _WebsiteListState();
@@ -21,16 +21,14 @@ class _WebsiteListState extends State<WebsiteList> {
 
   @override
   void initState() {
-    print("WebsiteList: ${this.widget.websiteListNotifier}");
-    this.websitesToDisplay = this.widget.websiteListNotifier.value;
+    print("WebsiteList: ${this.widget.websiteList}");
+    this.websitesToDisplay = this.widget.websiteList;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: this.widget.websiteListNotifier,
-        builder: (context, websiteList, widget) => Scrollbar(
+    return Scrollbar(
               isAlwaysShown: false,
               child: CustomScrollView(slivers: <Widget>[
                 SliverAppBar(
@@ -46,21 +44,21 @@ class _WebsiteListState extends State<WebsiteList> {
                             alignment: Alignment.centerLeft,
                             child: CupertinoSearchTextField(onChanged: (text) {
                               setState(() {
-                                this.websitesToDisplay = websiteList
+                                this.websitesToDisplay = this.widget.websiteList
                                     .where((element) => element.websiteName
                                         .toLowerCase()
                                         .contains(text.toLowerCase()))
                                     .toList();
                               });
                             })))),
-                if (websiteList.isEmpty)
+                if (this.widget.websiteList.isEmpty)
                   _websiteEmpty()
                 else if (websitesToDisplay.isEmpty)
                   _noSearchResults()
                 else
                   _websiteBody()
               ]),
-            ));
+            );
   }
 
   Widget _websiteBody() {
@@ -80,6 +78,8 @@ class _WebsiteListState extends State<WebsiteList> {
             onTap: () {
               setState(() {
                 website.toggleFavorite();
+                this.websitesToDisplay.remove(website);
+                //this.widget.websiteList
               });
               print(website.isFavorite);
             },

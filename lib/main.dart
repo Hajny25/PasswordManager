@@ -8,8 +8,11 @@ import 'package:password_manager/themes/darkTheme.dart';
 import 'package:password_manager/userMenu/userMenu.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'Login/loginPage.dart';
 import 'globals.dart' as Globals;
+import 'userMenu/websiteNotifier.dart';
+import 'websites.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -37,12 +40,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return         MultiProvider(
+          providers: [
+            // ChangeNotifierProvider<User>(
+            //     create: (_) => FirebaseAuthHelper().getCurrentUser()),
+            ChangeNotifierProvider<UsedWebsiteListNotifier>(
+                create: (_) => UsedWebsiteListNotifier([])),
+            ChangeNotifierProvider<UnusedWebsiteListNotifier>(
+                create: (_) => UnusedWebsiteListNotifier([Website("sample", 0)]))
+          ],
+          builder: (context, _ ) =>GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Password Manager',
       theme: darkTheme,
       home: UserMenu(), //WebsiteClose(Website("Google", 0)),
-    );
+    ));
   }
 } 
 
