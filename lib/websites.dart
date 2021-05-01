@@ -8,9 +8,9 @@ class Website {
 
   Website(this.websiteName, this.update);
 
-  // factory Website.fromMap(Map<String, dynamic> map) {
-  //   return Website(map["websiteName"], map["update"]);
-  // }
+  factory Website.fromMap(Map<String, dynamic> map) {
+    return Website(map["websiteName"], map["update"]);
+  }
 
   Widget getImage({double width, double height}) {
     if (this.update == 0) {
@@ -37,6 +37,19 @@ class UserWebsite extends Website {
   UserWebsite(websiteName, update, this.username, this.password,
       [this.isFavorite = false])
       : super(websiteName, update);
+
+  @override
+  factory UserWebsite.fromMap(Map<String, dynamic> map) {
+    return UserWebsite(
+        map["websiteName"], map["update"], map["username"], map["password"], map["isFavorite"]);
+  }
+
+  factory UserWebsite.fromWebsite(
+      Website website, String username, String password,
+      [bool isFavorite = false]) {
+    return UserWebsite(
+        website.websiteName, website.update, username, password, isFavorite);
+  }
 
   void toggleFavorite() {
     this.isFavorite = !this.isFavorite;
