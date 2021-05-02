@@ -28,8 +28,7 @@ abstract class Website {
   }
 }
 
-
-class UnusedWebsite extends Website{
+class UnusedWebsite extends Website {
   String websiteName;
   int update; // 0: from beginning, n: added with update no. n
 
@@ -39,6 +38,9 @@ class UnusedWebsite extends Website{
     return UnusedWebsite(map["websiteName"], map["update"]);
   }
 
+  factory UnusedWebsite.fromUserWebsite(UserWebsite userWebsite) {
+    return UnusedWebsite(userWebsite.websiteName, userWebsite.update);
+  }
 }
 
 class UserWebsite extends Website {
@@ -52,11 +54,11 @@ class UserWebsite extends Website {
 
   @override
   factory UserWebsite.fromMap(Map<String, dynamic> map) {
-    return UserWebsite(
-        map["websiteName"], map["update"], map["username"], map["password"], map["isFavorite"]);
+    return UserWebsite(map["websiteName"], map["update"], map["username"],
+        map["password"], map["isFavorite"]);
   }
 
-  factory UserWebsite.fromWebsite(
+  factory UserWebsite.fromUnusedWebsite(
       UnusedWebsite website, String username, String password,
       [bool isFavorite = false]) {
     return UserWebsite(
