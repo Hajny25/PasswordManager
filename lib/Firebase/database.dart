@@ -23,7 +23,7 @@ Future<void> registerInDatabase(User user) async {
 
 void addGlobalWebsites() {
   // add global websites
-  List<Website> websiteList; // needs to be initialized
+  List<UnusedWebsite> websiteList; // needs to be initialized
   for (var website in websiteList) {
     Map websiteJson = jsonifyWebsite(website);
     globalWebsitesCollection.doc(website.websiteName).set(websiteJson);
@@ -79,8 +79,8 @@ Future<List<UserWebsite>> getUsedWebsites(User user) async {
   return websitesList;
 }
 
-Future<List<Website>> getUnusedWebsites(User user) async {
-  List<Website> websitesList = [];
+Future<List<UnusedWebsite>> getUnusedWebsites(User user) async {
+  List<UnusedWebsite> websitesList = [];
   final unusedWebsitesCollection = await FirebaseFirestore.instance
       .collection("users/")
       .doc(user.uid)
@@ -90,25 +90,25 @@ Future<List<Website>> getUnusedWebsites(User user) async {
   for (var doc in docs) {
     final websiteName = doc["websiteName"];
     final update = doc["update"];
-    websitesList.add(Website(websiteName, update));
+    websitesList.add(UnusedWebsite(websiteName, update));
   }
   return websitesList;
 }
 
-Future<List<Website>> getGlobalWebsites() async {
+Future<List<UnusedWebsite>> getGlobalWebsites() async {
   // gets all websites
-  List<Website> websitesList = [];
+  List<UnusedWebsite> websitesList = [];
   final websitesSnapshot = await globalWebsitesCollection.get();
   websitesSnapshot.docs.forEach((doc) {
     if (doc.exists) {
-      websitesList.add(Website(doc["websiteName"], doc["update"]));
+      websitesList.add(UnusedWebsite(doc["websiteName"], doc["update"]));
     }
   });
   return websitesList;
 }
 
 void addWebsitePassword(
-    User user, Website website, String username, String password) {
+    User user, UnusedWebsite website, String username, String password) {
   UserWebsite userWebsite = transferToUserWebsite(website, username, password);
   addWebsiteEntry(user, "passwords", userWebsite);
   deleteWebsiteEntry(user, "unused", website.websiteName);
@@ -143,7 +143,7 @@ void addWebsiteEntry(User user, String collectionName, Website website) async {
 }
 
 UserWebsite transferToUserWebsite(
-    Website website, String username, String password,
+    UnusedWebsite website, String username, String password,
     [bool isFavorite = false]) {
   return UserWebsite(
       website.websiteName, website.update, username, password, isFavorite);
@@ -172,7 +172,7 @@ Map<String, dynamic> jsonifyUser(User user) {
   return {"id": user.uid, "name": user.displayName};
 }
 
-Map<String, dynamic> jsonifyWebsite(Website website) {
+Map<String, dynamic> jsonifyWebsite(UnusedWebsite website) {
   // returns a website as a dict
   Map<String, dynamic> websiteJson = {};
   websiteJson["websiteName"] = website.websiteName;

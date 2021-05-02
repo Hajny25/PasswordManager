@@ -6,12 +6,12 @@ class WebsiteListNotifier extends ValueNotifier<List<Website>> {
   List<Website> list;
   WebsiteListNotifier(this.list) : super(list);
 
-  void addWebsite(Website website) {
+  void addWebsite(UnusedWebsite website) {
     this.list.add(website);
     notifyListeners();
   }
 
-  void removeWebsite(Website website) {
+  void removeWebsite(UnusedWebsite website) {
     this.list.remove(website);
     notifyListeners();
   }
@@ -23,6 +23,6 @@ class UsedWebsiteListNotifier extends WebsiteListNotifier {
 }
 
 class UnusedWebsiteListNotifier extends WebsiteListNotifier {
-  List<Website> websiteList;
+  List<UnusedWebsite> websiteList;
   UnusedWebsiteListNotifier(this.websiteList) : super(websiteList);
 }

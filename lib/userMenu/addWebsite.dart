@@ -19,8 +19,8 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final scrollController = FixedExtentScrollController();
-  Website website;
-  List<Website> websitesToDisplay;
+  UnusedWebsite website;
+  List<UnusedWebsite> websitesToDisplay;
 
   @override
   void initState() {
@@ -28,13 +28,13 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
     super.initState();
   }
 
-  void deleteUnusedWebsite(Website website) {
+  void deleteUnusedWebsite(UnusedWebsite website) {
     this.websitesToDisplay.remove(website);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Website> websitesList =
+    List<UnusedWebsite> websitesList =
         Provider.of<UnusedWebsiteListNotifier>(context).value;
     //this.websitesToDisplay = websitesList;
     return SafeArea(
@@ -132,7 +132,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
   void onConfirm() {
     if (this.websitesToDisplay.isNotEmpty) {
       User user = FirebaseAuthHelper().getCurrentUser();
-      Website website =
+      UnusedWebsite website =
           this.websitesToDisplay[this.scrollController.selectedItem];
       String username = usernameController.text;
       String password = passwordController.text;

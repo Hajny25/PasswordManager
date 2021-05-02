@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/imageUpdatesHandler.dart';
 import 'dart:io';
 import 'globals.dart' as Globals;
 
-class Website {
+abstract class Website {
   String websiteName;
   int update; // 0: from beginning, n: added with update no. n
 
   Website(this.websiteName, this.update);
 
-  factory Website.fromMap(Map<String, dynamic> map) {
-    return Website(map["websiteName"], map["update"]);
-  }
+  factory Website.fromMap(Map<String, dynamic> map) => null;
 
   Widget getImage({double width, double height}) {
     if (this.update == 0) {
@@ -29,6 +28,19 @@ class Website {
   }
 }
 
+
+class UnusedWebsite extends Website{
+  String websiteName;
+  int update; // 0: from beginning, n: added with update no. n
+
+  UnusedWebsite(this.websiteName, this.update) : super(websiteName, update);
+
+  factory UnusedWebsite.fromMap(Map<String, dynamic> map) {
+    return UnusedWebsite(map["websiteName"], map["update"]);
+  }
+
+}
+
 class UserWebsite extends Website {
   String username;
   String password;
@@ -45,7 +57,7 @@ class UserWebsite extends Website {
   }
 
   factory UserWebsite.fromWebsite(
-      Website website, String username, String password,
+      UnusedWebsite website, String username, String password,
       [bool isFavorite = false]) {
     return UserWebsite(
         website.websiteName, website.update, username, password, isFavorite);
