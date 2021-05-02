@@ -127,8 +127,8 @@ class _UserMenuBodyState extends State<UserMenuBody> {
   }
 
   Future<void> fetchData() async {
-    final websiteList = await getUsedWebsites(widget.user);
-    final unusedWebsitesList = await getUnusedWebsites(widget.user);
+    final websiteList = await getUsedWebsites(widget.user); //DatabaseHandler.getUsedWebsites
+    final unusedWebsitesList = await getUnusedWebsites(widget.user); //DatabaseHandler.getUnusedWebsites
     this.widget.isLoadedSetter();
     this.setWebsiteListNotifiers(websiteList, unusedWebsitesList);
     print("Fetching data completed.");

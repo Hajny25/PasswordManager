@@ -100,8 +100,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               primary: Theme.of(context).accentColor,
                               padding: EdgeInsets.symmetric(vertical: 15),
                               backgroundColor: Colors.transparent,
-                              side:
-                                  BorderSide(color: Theme.of(context).accentColor, width: 1),
+                              side: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                  width: 1),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           onPressed: () {
@@ -114,13 +115,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Text("Sign up",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Theme.of(context).accentColor, fontSize: 16)),
+                                  color: Theme.of(context).accentColor,
+                                  fontSize: 16)),
                         ),
                         SizedBox(height: 55),
                         RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(fontSize: 16),
                                 children: <TextSpan>[
                                   TextSpan(text: "Already have an account?\n"),
                                   TextSpan(
@@ -169,7 +174,7 @@ Future<void> signUpSuccessful() async {
   await changeName(user);
   user = FirebaseAuthHelper().getCurrentUser();
   user.reload();
-  await registerInDatabase(user);
+  await registerInDatabase(user); // DatabaseHandler.setupDatabase();
 }
 
 InputDecoration _buildInputDecoration(
@@ -183,21 +188,30 @@ InputDecoration _buildInputDecoration(
         .inputDecorationTheme
         .labelStyle
         .copyWith(fontSize: 15),
-    hintStyle: Theme.of(context)
-        .inputDecorationTheme
-        .hintStyle
-        .copyWith(fontSize: 15),
-    errorStyle: Theme.of(context)
-        .inputDecorationTheme
-        .hintStyle
-        .copyWith(fontSize: 15),
-    suffixIcon: Icon(icon, color: Theme.of(context).inputDecorationTheme.labelStyle.color),
-    border:
-        UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).inputDecorationTheme.labelStyle.color)),//MyColors.grey[7])), // 7
-    focusedBorder:
-        UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).inputDecorationTheme.hintStyle.color)),//MyColors.grey[5])), // 5
-    enabledBorder:
-        UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).inputDecorationTheme.labelStyle.color)),//MyColors.grey[7])), // 7
+    hintStyle:
+        Theme.of(context).inputDecorationTheme.hintStyle.copyWith(fontSize: 15),
+    errorStyle:
+        Theme.of(context).inputDecorationTheme.hintStyle.copyWith(fontSize: 15),
+    suffixIcon: Icon(icon,
+        color: Theme.of(context).inputDecorationTheme.labelStyle.color),
+    border: UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: Theme.of(context)
+                .inputDecorationTheme
+                .labelStyle
+                .color)), //MyColors.grey[7])), // 7
+    focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: Theme.of(context)
+                .inputDecorationTheme
+                .hintStyle
+                .color)), //MyColors.grey[5])), // 5
+    enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: Theme.of(context)
+                .inputDecorationTheme
+                .labelStyle
+                .color)), //MyColors.grey[7])), // 7
     errorBorder:
         UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
   );

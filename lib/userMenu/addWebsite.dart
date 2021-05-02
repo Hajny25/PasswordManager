@@ -140,10 +140,10 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
       print(username);
       print(password);
 
-      addWebsitePassword(user, website, username, password);
+      addWebsitePassword(user, website, username, password); //DatabaseHandler.addPasswordEntry(website, username, password)
       deleteUnusedWebsite(website);
       print(this.websitesToDisplay);
-      //this.widget.updateWebsites(website);
+      //this.widget.updateWebsites(website); 
     } else {
       showCupertinoDialog(
           context: context,

@@ -83,7 +83,7 @@ class _WebsiteListState extends State<WebsiteList> {
             onTap: () {
               setState(() {
                 website.toggleFavorite();
-                database.updateIsFavorite(website);
+                database.updateIsFavorite(website); //DatabaseHander.updateFavorite(website)
                 if (this.widget.page != "vault") {
                   this.websitesToDisplay.remove(website);
                 }
