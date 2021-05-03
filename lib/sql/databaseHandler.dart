@@ -1,14 +1,13 @@
+import 'package:password_manager/Firebase/database.dart';
 import '../websites.dart';
 import 'databaseCreator.dart';
 import 'tables.dart';
 
 class DatabaseHandler {
   static Future<void> setupDatabase() async {
-    DatabaseCreator().initDatabase();
-  }
-
-  static setGlobalWebsites(List<UnusedWebsite> websiteList) {
-    Unused().addAllGlobalWebsites(websiteList);
+    await DatabaseCreator().initDatabase();
+    List<UnusedWebsite> websiteList = await getGlobalWebsites();
+    await Unused().addAllGlobalWebsites(websiteList);
   }
 
   static Future<List<UserWebsite>> getUsedWebsites() async {

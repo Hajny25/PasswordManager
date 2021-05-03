@@ -8,6 +8,7 @@ import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 import 'package:password_manager/cupertinoHelpers.dart';
 import 'package:provider/provider.dart';
+import '../sql/databaseHandler.dart';
 
 class AddWebsitePopUp extends StatefulWidget {
   AddWebsitePopUp();
@@ -140,7 +141,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
       print(username);
       print(password);
 
-      addWebsitePassword(user, website, username, password); //DatabaseHandler.addPasswordEntry(website, username, password)
+      DatabaseHandler.addPasswordEntry(website, username, password); //addWebsitePassword(user, website, username, password); 
       deleteUnusedWebsite(website);
       print(this.websitesToDisplay);
       //this.widget.updateWebsites(website); 

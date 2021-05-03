@@ -31,7 +31,7 @@ void addGlobalWebsites() {
 }
 
 // Future<List<Website>> getUserWebsites(User user, String collectionName) async {
-//   List<String> fields = ["websiteName", "update"];
+//   List<String> fields = ["websiteName", "imageGroup"];
 //   List<Website> websitesList = [];
 //   if (collectionName != "unused") {
 //     fields.addAll(["username", "password", "isFavorite"]);
@@ -69,12 +69,12 @@ Future<List<UserWebsite>> getUsedWebsites(User user) async {
   final docs = unusedWebsitesCollection.docs;
   for (var doc in docs) {
     final websiteName = doc["websiteName"];
-    final update = doc["update"];
+    final imageGroup = doc["imageGroup"];
     final username = doc["username"];
     final password = doc["password"];
     final isFavorite = doc["isFavorite"];
-    websitesList
-        .add(UserWebsite(websiteName, update, username, password, isFavorite));
+    websitesList.add(
+        UserWebsite(websiteName, imageGroup, username, password, isFavorite));
   }
   return websitesList;
 }
@@ -89,8 +89,8 @@ Future<List<UnusedWebsite>> getUnusedWebsites(User user) async {
   final docs = unusedWebsitesCollection.docs;
   for (var doc in docs) {
     final websiteName = doc["websiteName"];
-    final update = doc["update"];
-    websitesList.add(UnusedWebsite(websiteName, update));
+    final imageGroup = doc["imageGroup"];
+    websitesList.add(UnusedWebsite(websiteName, imageGroup));
   }
   return websitesList;
 }
@@ -101,7 +101,7 @@ Future<List<UnusedWebsite>> getGlobalWebsites() async {
   final websitesSnapshot = await globalWebsitesCollection.get();
   websitesSnapshot.docs.forEach((doc) {
     if (doc.exists) {
-      websitesList.add(UnusedWebsite(doc["websiteName"], doc["update"]));
+      websitesList.add(UnusedWebsite(doc["websiteName"], doc["imageGroup"]));
     }
   });
   return websitesList;
@@ -146,7 +146,7 @@ UserWebsite transferToUserWebsite(
     UnusedWebsite website, String username, String password,
     [bool isFavorite = false]) {
   return UserWebsite(
-      website.websiteName, website.update, username, password, isFavorite);
+      website.websiteName, website.imageGroup, username, password, isFavorite);
 }
 
 void updateField(
@@ -176,7 +176,7 @@ Map<String, dynamic> jsonifyWebsite(UnusedWebsite website) {
   // returns a website as a dict
   Map<String, dynamic> websiteJson = {};
   websiteJson["websiteName"] = website.websiteName;
-  websiteJson["update"] = website.update;
+  websiteJson["imageGroup"] = website.imageGroup;
   return websiteJson;
 }
 
@@ -184,7 +184,7 @@ Map<String, dynamic> jsonifyUserWebsite(UserWebsite website) {
   // returns a website as a dict
   Map<String, dynamic> websiteJson = {};
   websiteJson["websiteName"] = website.websiteName;
-  websiteJson["update"] = website.update;
+  websiteJson["imageGroup"] = website.imageGroup;
   websiteJson["username"] = website.username;
   websiteJson["password"] = website.password;
   websiteJson["isFavorite"] = website.isFavorite;

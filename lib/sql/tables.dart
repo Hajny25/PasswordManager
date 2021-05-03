@@ -18,7 +18,7 @@ abstract class WebsiteTable<T extends Website> {
 
   Future<List<T>> getWebsiteList();
 
-  Future<List<Map<String, Object>>> _getAllWebsites() async {
+  Future<List<Map<String, Object>>> getAllWebsites(String tableName) async {
     final sql = '''
       SELECT * FROM $tableName;
     ''';
@@ -30,7 +30,7 @@ abstract class WebsiteTable<T extends Website> {
 class Passwords extends WebsiteTable<UserWebsite> {
   static const tableName = "Passwords";
   static const websiteNameField = "websiteName";
-  static const updateField = "updateField";
+  static const imageGroupField = "imageGroup";
   static const usernameField = "username";
   static const passwordField = "password";
   static const isFavoriteField = "isFavorite";
@@ -40,7 +40,7 @@ class Passwords extends WebsiteTable<UserWebsite> {
       INSERT INTO $tableName
         (
           $websiteNameField,
-          $updateField,
+          $imageGroupField,
           $usernameField,
           $passwordField,
           $isFavoriteField
@@ -48,7 +48,7 @@ class Passwords extends WebsiteTable<UserWebsite> {
         VALUES
         (
           "${website.websiteName}",
-          ${website.update},
+          ${website.imageGroup},
           "${website.username}",
           "${website.password}",
           "${website.isFavorite}"
@@ -60,7 +60,7 @@ class Passwords extends WebsiteTable<UserWebsite> {
   @override
   Future<List<UserWebsite>> getWebsiteList() async {
     List<UserWebsite> websiteList = [];
-    List<Map<String, Object>> queryResult = await _getAllWebsites();
+    List<Map<String, Object>> queryResult = await getAllWebsites(tableName);
     queryResult.forEach((map) {
       websiteList.add(UserWebsite.fromMap(map));
     });
@@ -80,7 +80,7 @@ class Passwords extends WebsiteTable<UserWebsite> {
 class Unused extends WebsiteTable<UnusedWebsite> {
   static const tableName = "Unused";
   static const websiteNameField = "websiteName";
-  static const updateField = "updateField";
+  static const imageGroupField = "imageGroup";
 
   @override
   Future<void> addWebsite(UnusedWebsite website) async {
@@ -88,27 +88,27 @@ class Unused extends WebsiteTable<UnusedWebsite> {
       INSERT INTO $tableName
         (
           $websiteNameField,
-          $updateField,
+          $imageGroupField
         )
         VALUES
         (
-          "${website.websiteName}",
-          ${website.update},
+          '${website.websiteName}',
+          ${website.imageGroup}
         );
     ''';
     await db.rawInsert(sql);
   }
 
-  void addAllGlobalWebsites(List<UnusedWebsite> websiteList) async {
-    websiteList.forEach((website) {
-      addWebsite(website);
+  Future<void> addAllGlobalWebsites(List<UnusedWebsite> websiteList) async {
+    websiteList.forEach((website) async {
+      await addWebsite(website);
     });
   }
 
   @override
   Future<List<UnusedWebsite>> getWebsiteList() async {
     List<UnusedWebsite> websiteList = [];
-    List<Map<String, Object>> queryResult = await _getAllWebsites();
+    List<Map<String, Object>> queryResult = await getAllWebsites(tableName);
     queryResult.forEach((map) {
       websiteList.add(UnusedWebsite.fromMap(map));
     });

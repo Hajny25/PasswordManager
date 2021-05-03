@@ -13,6 +13,7 @@ import 'Login/loginPage.dart';
 import 'globals.dart' as Globals;
 import 'userMenu/websiteNotifier.dart';
 import 'websites.dart';
+import 'sql/databaseHandler.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -40,23 +41,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return         MultiProvider(
-          providers: [
-            // ChangeNotifierProvider<User>(
-            //     create: (_) => FirebaseAuthHelper().getCurrentUser()),
-            ChangeNotifierProvider<UsedWebsiteListNotifier>(
-                create: (_) => UsedWebsiteListNotifier([])),
-            ChangeNotifierProvider<UnusedWebsiteListNotifier>(
-                create: (_) => UnusedWebsiteListNotifier([UnusedWebsite("sample", 0)]))
-          ],
-          builder: (context, _ ) =>GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Password Manager',
-      theme: darkTheme,
-      home: UserMenu(), //WebsiteClose(Website("Google", 0)),
-    ));
+    return MultiProvider(
+        providers: [
+          // ChangeNotifierProvider<User>(
+          //     create: (_) => FirebaseAuthHelper().getCurrentUser()),
+          ChangeNotifierProvider<UsedWebsiteListNotifier>(
+              create: (_) => UsedWebsiteListNotifier([])),
+          ChangeNotifierProvider<UnusedWebsiteListNotifier>(
+              create: (_) =>
+                  UnusedWebsiteListNotifier([UnusedWebsite("sample", 0)]))
+        ],
+        builder: (context, _) => GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Password Manager',
+              theme: darkTheme,
+              home: RegisterPage(), //WebsiteClose(Website("Google", 0)),
+            ));
   }
-} 
+}
 
 class AuthenticationWrapper extends StatelessWidget {
   @override

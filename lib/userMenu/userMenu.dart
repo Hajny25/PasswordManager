@@ -9,6 +9,7 @@ import 'package:password_manager/userMenu/vaultPage.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 import 'package:provider/provider.dart';
+import '../sql/databaseHandler.dart';
 
 import 'fab.dart';
 import 'favorites.dart';
@@ -127,8 +128,10 @@ class _UserMenuBodyState extends State<UserMenuBody> {
   }
 
   Future<void> fetchData() async {
-    final websiteList = await getUsedWebsites(widget.user); //DatabaseHandler.getUsedWebsites
-    final unusedWebsitesList = await getUnusedWebsites(widget.user); //DatabaseHandler.getUnusedWebsites
+    final websiteList = await DatabaseHandler
+        .getUsedWebsites(); // getUsedWebsites(widget.user);
+    final unusedWebsitesList = await DatabaseHandler
+        .getUnusedWebsites(); //getUnusedWebsites(widget.user);
     this.widget.isLoadedSetter();
     this.setWebsiteListNotifiers(websiteList, unusedWebsitesList);
     print("Fetching data completed.");
@@ -150,7 +153,6 @@ class _UserMenuBodyState extends State<UserMenuBody> {
         List<Widget> children;
         if (snapshot.connectionState == ConnectionState.done) {
           //} && snapshot.data != null) {
-          print(snapshot.data == null);
           Widget currentTab =
               this.tabs.values.toList()[this.widget.currentIndex]();
           print("FutureBuilder build?");

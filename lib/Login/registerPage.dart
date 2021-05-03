@@ -9,6 +9,7 @@ import '../Firebase/authentication.dart';
 import '../Firebase/database.dart';
 import '../encryption/User.dart';
 import '../userMenu/userMenu.dart'; // Text
+import '../sql/databaseHandler.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -155,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
         await FirebaseAuthHelper().createNewUser(email, passwordHash);
     if (status == AuthStatus.successful) {
       // move to User Menu
-      signUpSuccessful();
+      await signUpSuccessful();
       Get.to(() => UserMenu());
     } else {
       // show Error Popup
@@ -174,7 +175,7 @@ Future<void> signUpSuccessful() async {
   await changeName(user);
   user = FirebaseAuthHelper().getCurrentUser();
   user.reload();
-  await registerInDatabase(user); // DatabaseHandler.setupDatabase();
+  await DatabaseHandler.setupDatabase();
 }
 
 InputDecoration _buildInputDecoration(

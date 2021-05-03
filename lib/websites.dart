@@ -5,14 +5,14 @@ import 'globals.dart' as Globals;
 
 abstract class Website {
   String websiteName;
-  int update; // 0: from beginning, n: added with update no. n
+  int imageGroup; // 0: from beginning, n: added with update no. n
 
-  Website(this.websiteName, this.update);
+  Website(this.websiteName, this.imageGroup);
 
   factory Website.fromMap(Map<String, dynamic> map) => null;
 
   Widget getImage({double width, double height}) {
-    if (this.update == 0) {
+    if (this.imageGroup == 0) {
       return Image.asset(
         "assets/images/logos/logo_${websiteName.toLowerCase()}.png",
         width: width,
@@ -21,7 +21,7 @@ abstract class Website {
     } else {
       return Image.file(
           File(
-              "${Globals.appDir}/Update${this.update}/logo_${websiteName.toLowerCase()}.png"),
+              "${Globals.appDir}/Update${this.imageGroup}/logo_${websiteName.toLowerCase()}.png"),
           width: width,
           height: height);
     }
@@ -30,16 +30,17 @@ abstract class Website {
 
 class UnusedWebsite extends Website {
   String websiteName;
-  int update; // 0: from beginning, n: added with update no. n
+  int imageGroup; // 0: from beginning, n: added with update no. n
 
-  UnusedWebsite(this.websiteName, this.update) : super(websiteName, update);
+  UnusedWebsite(this.websiteName, this.imageGroup)
+      : super(websiteName, imageGroup);
 
   factory UnusedWebsite.fromMap(Map<String, dynamic> map) {
-    return UnusedWebsite(map["websiteName"], map["update"]);
+    return UnusedWebsite(map["websiteName"], map["imageGroup"]);
   }
 
   factory UnusedWebsite.fromUserWebsite(UserWebsite userWebsite) {
-    return UnusedWebsite(userWebsite.websiteName, userWebsite.update);
+    return UnusedWebsite(userWebsite.websiteName, userWebsite.imageGroup);
   }
 }
 
@@ -48,21 +49,21 @@ class UserWebsite extends Website {
   String password;
   bool isFavorite;
 
-  UserWebsite(websiteName, update, this.username, this.password,
+  UserWebsite(websiteName, imageGroup, this.username, this.password,
       [this.isFavorite = false])
-      : super(websiteName, update);
+      : super(websiteName, imageGroup);
 
   @override
   factory UserWebsite.fromMap(Map<String, dynamic> map) {
-    return UserWebsite(map["websiteName"], map["update"], map["username"],
+    return UserWebsite(map["websiteName"], map["imageGroup"], map["username"],
         map["password"], map["isFavorite"]);
   }
 
   factory UserWebsite.fromUnusedWebsite(
       UnusedWebsite website, String username, String password,
       [bool isFavorite = false]) {
-    return UserWebsite(
-        website.websiteName, website.update, username, password, isFavorite);
+    return UserWebsite(website.websiteName, website.imageGroup, username,
+        password, isFavorite);
   }
 
   void toggleFavorite() {
