@@ -2,27 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../websites.dart';
 
-class WebsiteListNotifier extends ValueNotifier<List<Website>> {
-  List<Website> list;
+class WebsiteListNotifier<T extends Website> extends ValueNotifier<List<T>> {
+  List<T> list;
   WebsiteListNotifier(this.list) : super(list);
 
-  void addWebsite(UnusedWebsite website) {
+  void addWebsite(T website) {
     this.list.add(website);
     notifyListeners();
   }
 
-  void removeWebsite(UnusedWebsite website) {
+  void removeWebsite(T website) {
     this.list.remove(website);
     notifyListeners();
   }
-}
-
-class UsedWebsiteListNotifier extends WebsiteListNotifier {
-  List<UserWebsite> websiteList;
-  UsedWebsiteListNotifier(this.websiteList) : super(websiteList);
-}
-
-class UnusedWebsiteListNotifier extends WebsiteListNotifier {
-  List<UnusedWebsite> websiteList;
-  UnusedWebsiteListNotifier(this.websiteList) : super(websiteList);
 }

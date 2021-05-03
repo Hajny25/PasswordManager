@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:password_manager/Firebase/authentication.dart';
 import 'package:password_manager/Firebase/database.dart';
 import 'package:password_manager/userMenu/passwordGenerator.dart';
+import 'package:password_manager/userMenu/websiteListWidget.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 import 'package:password_manager/cupertinoHelpers.dart';
@@ -25,7 +26,8 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
 
   @override
   void initState() {
-    this.websitesToDisplay = Provider.of<UnusedWebsiteListNotifier>(context, listen: false).value;
+    this.websitesToDisplay =
+        Provider.of<WebsiteListNotifier<UnusedWebsite>>(context, listen: false).value;
     super.initState();
   }
 
@@ -36,7 +38,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
   @override
   Widget build(BuildContext context) {
     List<UnusedWebsite> websitesList =
-        Provider.of<UnusedWebsiteListNotifier>(context).value;
+        Provider.of<WebsiteListNotifier<UnusedWebsite>>(context).value;
     //this.websitesToDisplay = websitesList;
     return SafeArea(
         child: CupertinoAlertDialog(
@@ -125,12 +127,12 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
             child:
                 Text("Confirm", style: Theme.of(context).textTheme.bodyText1),
             isDefaultAction: true,
-            onPressed: onConfirm),
+            onPressed: () async => await onConfirm()),
       ],
     ));
   }
 
-  void onConfirm() {
+  Future<void> onConfirm() async {
     if (this.websitesToDisplay.isNotEmpty) {
       User user = FirebaseAuthHelper().getCurrentUser();
       UnusedWebsite website =

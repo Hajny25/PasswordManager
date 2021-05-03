@@ -139,9 +139,9 @@ class _UserMenuBodyState extends State<UserMenuBody> {
 
   void setWebsiteListNotifiers(
       List<UserWebsite> usedWebsites, List<UnusedWebsite> unusedWebsites) {
-    Provider.of<UsedWebsiteListNotifier>(context, listen: false).value =
+    Provider.of<WebsiteListNotifier<UserWebsite>>(context, listen: false).value =
         usedWebsites;
-    Provider.of<UnusedWebsiteListNotifier>(context, listen: false).value =
+    Provider.of<WebsiteListNotifier<UnusedWebsite>>(context, listen: false).value =
         unusedWebsites;
   }
 

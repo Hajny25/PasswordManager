@@ -15,7 +15,7 @@ class _VaultPageState extends State<VaultPage> {
   Widget build(BuildContext context) {
     //print("VaultPage Build: ${this.widget.websiteListNotifer}");
     List<UserWebsite> websiteList =
-        Provider.of<UsedWebsiteListNotifier>(context).value;
+        Provider.of<WebsiteListNotifier<UserWebsite>>(context).value;
     print("Vault Build: $websiteList");
     return WebsiteList(websiteList, "vault");
   }

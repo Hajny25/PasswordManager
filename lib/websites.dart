@@ -55,8 +55,14 @@ class UserWebsite extends Website {
 
   @override
   factory UserWebsite.fromMap(Map<String, dynamic> map) {
-    return UserWebsite(map["websiteName"], map["imageGroup"], map["username"],
-        map["password"], map["isFavorite"]);
+    var isFavorite = map["isFavorite"];
+    return UserWebsite(
+      map["websiteName"],
+      map["imageGroup"],
+      map["username"],
+      map["password"],
+      isFavorite is bool ? isFavorite : isFavorite == 1
+    );
   }
 
   factory UserWebsite.fromUnusedWebsite(

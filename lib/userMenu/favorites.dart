@@ -15,7 +15,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   
   @override
   Widget build(BuildContext context) {
-    List<UserWebsite> websiteList = Provider.of<UsedWebsiteListNotifier>(context).value;
+    List<UserWebsite> websiteList = Provider.of<WebsiteListNotifier<UserWebsite>>(context).value;
     List<UserWebsite> favoritesList = websiteList
       .where((element) => element.isFavorite)
       .toList();

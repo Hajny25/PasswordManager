@@ -30,6 +30,7 @@ Future<void> main() async {
     }
   });
   runApp(MyApp());
+
 }
 
 Future<void> loadGlobals() async {
@@ -43,13 +44,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          // ChangeNotifierProvider<User>(
-          //     create: (_) => FirebaseAuthHelper().getCurrentUser()),
-          ChangeNotifierProvider<UsedWebsiteListNotifier>(
-              create: (_) => UsedWebsiteListNotifier([])),
-          ChangeNotifierProvider<UnusedWebsiteListNotifier>(
+          ChangeNotifierProvider<WebsiteListNotifier<UserWebsite>>(
+              create: (_) => WebsiteListNotifier<UserWebsite>([])),
+          ChangeNotifierProvider<WebsiteListNotifier<UnusedWebsite>>(
               create: (_) =>
-                  UnusedWebsiteListNotifier([UnusedWebsite("sample", 0)]))
+                  WebsiteListNotifier<UnusedWebsite>([]))
         ],
         builder: (context, _) => GetMaterialApp(
               debugShowCheckedModeBanner: false,
