@@ -7,12 +7,12 @@ class WebsiteListNotifier<T extends Website> extends ValueNotifier<List<T>> {
   WebsiteListNotifier(this.list) : super(list);
 
   void addWebsite(T website) {
-    this.list.add(website);
+    this.value.add(website);
     notifyListeners();
   }
 
   void removeWebsite(T website) {
-    this.list.remove(website);
+    this.value.remove(website);
     notifyListeners();
   }
 }

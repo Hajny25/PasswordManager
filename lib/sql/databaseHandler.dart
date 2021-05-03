@@ -20,11 +20,9 @@ class DatabaseHandler {
     return websiteList;
   }
 
-  static Future<void> addPasswordEntry(
-      UnusedWebsite unusedWebsite, String username, String password) async {
+  static Future<void> addPasswordEntry(UnusedWebsite unusedWebsite,
+      UserWebsite userWebsite) async {
     await Unused().deleteWebsite(unusedWebsite);
-    UserWebsite userWebsite =
-        UserWebsite.fromUnusedWebsite(unusedWebsite, username, password);
     await Passwords().addWebsite(userWebsite);
   }
 

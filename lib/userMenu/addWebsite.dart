@@ -21,19 +21,16 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final scrollController = FixedExtentScrollController();
-  UnusedWebsite website;
   List<UnusedWebsite> websitesToDisplay;
 
   @override
   void initState() {
     this.websitesToDisplay =
-        Provider.of<WebsiteListNotifier<UnusedWebsite>>(context, listen: false).value;
+        Provider.of<WebsiteListNotifier<UnusedWebsite>>(context, listen: false)
+            .value;
     super.initState();
   }
 
-  void deleteUnusedWebsite(UnusedWebsite website) {
-    this.websitesToDisplay.remove(website);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,19 +131,15 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
 
   Future<void> onConfirm() async {
     if (this.websitesToDisplay.isNotEmpty) {
-      User user = FirebaseAuthHelper().getCurrentUser();
-      UnusedWebsite website =
+      UnusedWebsite unusedWebsite =
           this.websitesToDisplay[this.scrollController.selectedItem];
       String username = usernameController.text;
       String password = passwordController.text;
-      print(website.websiteName);
+      print(unusedWebsite.websiteName);
       print(username);
       print(password);
-
-      DatabaseHandler.addPasswordEntry(website, username, password); //addWebsitePassword(user, website, username, password); 
-      deleteUnusedWebsite(website);
-      print(this.websitesToDisplay);
-      //this.widget.updateWebsites(website); 
+      await this.addWebsite(unusedWebsite, username, password);
+      Navigator.pop(context);
     } else {
       showCupertinoDialog(
           context: context,
@@ -162,5 +155,17 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
                 ],
               ));
     }
+  }
+
+  Future<void> addWebsite(
+      UnusedWebsite unusedWebsite, String username, String password) async {
+    UserWebsite userWebsite =
+        UserWebsite.fromUnusedWebsite(unusedWebsite, username, password);
+    await DatabaseHandler.addPasswordEntry(unusedWebsite,
+        userWebsite); //addWebsitePassword(user, website, username, password);
+    Provider.of<WebsiteListNotifier<UserWebsite>>(context, listen: false)
+        .addWebsite(userWebsite);
+    print(Provider.of<WebsiteListNotifier<UserWebsite>>(context, listen: false)
+        .value);
   }
 }
