@@ -25,32 +25,44 @@ class DatabaseCreator {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await _createPasswordTable(db);
+    await _createWebsitesTable(db);
+    await _createPasswordsTable(db);
     await _createUnusedTable(db);
   }
 
-  Future<void> _createPasswordTable(Database db) async {
-    final query = '''
-      CREATE TABLE ${Passwords.tableName} 
+  Future<void> _createWebsitesTable(Database db) async {
+    final sql = '''
+      CREATE TABLE ${WebsitesTable.tableName}
       (
-        ${Passwords.websiteNameField} TEXT PRIMARY KEY,
-        ${Passwords.imageGroupField} INT NOT NULL,
+        ${WebsitesTable.websiteNameField} TEXT NOT NULL,
+        ${WebsitesTable.imageGroupField} INT NOT NULL
+      );
+    ''';
+    await db.execute(sql);
+  }
+
+  Future<void> _createPasswordsTable(Database db) async {
+    final sql = '''
+      CREATE TABLE ${Passwords.tableName}
+      (
+        ${Table.foreignKeyField} INT NOT NULL, 
         ${Passwords.usernameField} TEXT NOT NULL,
         ${Passwords.passwordField} TEXT NOT NULL,
-        ${Passwords.isFavoriteField} BIT NOT NULL
+        ${Passwords.isFavoriteField} BIT NOT NULL,
+        FOREIGN KEY (${Table.foreignKeyField}) REFERENCES ${WebsitesTable.tableName}(${WebsitesTable.primaryKeyField})
       );
-      ''';
-    await db.execute(query);
+    ''';
+    await db.execute(sql);
   }
 
   Future<void> _createUnusedTable(Database db) async {
-    final query = '''
+    final sql = '''
       CREATE TABLE ${Unused.tableName} 
       (
-        ${Unused.websiteNameField} TEXT PRIMARY KEY,
-        ${Unused.imageGroupField} INT NOT NULL
+        ${Table.foreignKeyField} INT NOT NULL,
+        FOREIGN KEY (${Table.foreignKeyField}) REFERENCES ${WebsitesTable.tableName}(${WebsitesTable.primaryKeyField})
       );
-      ''';
-    await db.execute(query);
+    ''';
+    await db.execute(sql);
   }
 }

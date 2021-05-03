@@ -7,6 +7,7 @@ class DatabaseHandler {
   static Future<void> setupDatabase() async {
     await DatabaseCreator().initDatabase();
     List<UnusedWebsite> websiteList = await getGlobalWebsites();
+    await WebsitesTable().addAllGlobalWebsites(websiteList);
     await Unused().addAllGlobalWebsites(websiteList);
   }
 
@@ -20,8 +21,8 @@ class DatabaseHandler {
     return websiteList;
   }
 
-  static Future<void> addPasswordEntry(UnusedWebsite unusedWebsite,
-      UserWebsite userWebsite) async {
+  static Future<void> addPasswordEntry(
+      UnusedWebsite unusedWebsite, UserWebsite userWebsite) async {
     await Unused().deleteWebsite(unusedWebsite);
     await Passwords().addWebsite(userWebsite);
   }

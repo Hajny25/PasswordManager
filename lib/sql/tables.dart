@@ -1,14 +1,45 @@
 import 'package:password_manager/sql/databaseCreator.dart';
 import '../websites.dart';
 
-abstract class WebsiteTable<T extends Website> {
+class WebsitesTable {
+  final db = DatabaseCreator.db;
+  static const tableName = "Websites";
+  static const primaryKeyField = "rowid";
+  static const websiteNameField = "websiteName";
+  static const imageGroupField = "imageGroup";
+  static const foreignKeyQuery =
+      "SELECT ${WebsitesTable.primaryKeyField} FROM ${WebsitesTable.tableName} WHERE ${WebsitesTable.websiteNameField}";
+
+  Future<void> addAllGlobalWebsites(List<UnusedWebsite> websiteList) async {
+    websiteList.forEach((website) async {
+      await _addWebsite(website);
+    });
+  }
+
+  Future<void> _addWebsite(UnusedWebsite website) async {
+    final sql = '''
+      INSERT INTO $tableName
+        (
+          $websiteNameField,
+          $imageGroupField
+        )
+        VALUES
+        (
+          '${website.websiteName}',
+          '${website.imageGroup}'
+        );
+    ''';
+    await db.rawInsert(sql);
+  }
+}
+
+abstract class Table<T extends Website> {
   final db = DatabaseCreator.db;
   static String tableName;
-  static String websiteNameField;
+  static String foreignKeyField = "w_id";
 
-  WebsiteTable(tableName, websiteNameField) {
-    WebsiteTable.tableName = tableName;
-    WebsiteTable.websiteNameField = websiteNameField;
+  Table(tableName) {
+    Table.tableName = tableName;
   }
 
   Future<void> addWebsite(T website);
@@ -16,7 +47,12 @@ abstract class WebsiteTable<T extends Website> {
   Future<void> deleteWebsite(T website) async {
     final sql = '''
       DELETE FROM $tableName
-      WHERE $websiteNameField = '${website.websiteName}';
+      WHERE $foreignKeyField in
+        (
+          SELECT ${WebsitesTable.primaryKeyField}
+          FROM ${WebsitesTable.tableName}
+          WHERE ${WebsitesTable.websiteNameField} = '${website.websiteName}'
+        );
     ''';
     await db.rawDelete(sql);
   }
@@ -25,37 +61,35 @@ abstract class WebsiteTable<T extends Website> {
 
   Future<List<Map<String, Object>>> getAllWebsites() async {
     final sql = '''
-      SELECT * FROM $tableName;
+      SELECT * FROM $tableName, ${WebsitesTable.tableName}
+      WHERE ${Table.foreignKeyField} 
+        = ${WebsitesTable.tableName}.${WebsitesTable.primaryKeyField};
     ''';
     List<Map<String, Object>> queryResult = await db.rawQuery(sql);
     return queryResult;
   }
 }
 
-class Passwords extends WebsiteTable<UserWebsite> {
+class Passwords extends Table<UserWebsite> {
   static const tableName = "Passwords";
-  static const websiteNameField = "websiteName";
-  static const imageGroupField = "imageGroup";
   static const usernameField = "username";
   static const passwordField = "password";
   static const isFavoriteField = "isFavorite";
 
-  Passwords() : super(tableName, websiteNameField);
+  Passwords() : super(tableName);
 
   Future<void> addWebsite(UserWebsite website) async {
     final sql = '''
       INSERT INTO $tableName
         (
-          $websiteNameField,
-          $imageGroupField,
+          ${Table.foreignKeyField},
           $usernameField,
           $passwordField,
           $isFavoriteField
         )
         VALUES
         (
-          '${website.websiteName}',
-          ${website.imageGroup},
+          (${WebsitesTable.foreignKeyQuery} = '${website.websiteName}'),
           '${website.username}',
           '${website.password}',
           ${website.isFavorite ? 1 : 0}
@@ -78,31 +112,27 @@ class Passwords extends WebsiteTable<UserWebsite> {
     final sql = '''
       UPDATE $tableName
       SET $isFavoriteField = ${website.isFavorite ? 1 : 0}
-      WHERE $websiteNameField = '{$website.websiteName}';
+      WHERE ${Table.foreignKeyField} in (${WebsitesTable.foreignKeyQuery} = '${website.websiteName}');
     ''';
     await db.rawUpdate(sql);
   }
 }
 
-class Unused extends WebsiteTable<UnusedWebsite> {
+class Unused extends Table<UnusedWebsite> {
   static const tableName = "Unused";
-  static const websiteNameField = "websiteName";
-  static const imageGroupField = "imageGroup";
 
-  Unused() : super(tableName, websiteNameField);
+  Unused() : super(tableName);
 
   @override
   Future<void> addWebsite(UnusedWebsite website) async {
     final sql = '''
       INSERT INTO $tableName
         (
-          $websiteNameField,
-          $imageGroupField
+          ${Table.foreignKeyField}
         )
         VALUES
         (
-          '${website.websiteName}',
-          ${website.imageGroup}
+          (${WebsitesTable.foreignKeyQuery} = '${website.websiteName}')
         );
     ''';
     await db.rawInsert(sql);

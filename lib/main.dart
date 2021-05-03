@@ -47,8 +47,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<WebsiteListNotifier<UserWebsite>>(
               create: (_) => WebsiteListNotifier<UserWebsite>([])),
           ChangeNotifierProvider<WebsiteListNotifier<UnusedWebsite>>(
-              create: (_) =>
-                  WebsiteListNotifier<UnusedWebsite>([]))
+              create: (_) => WebsiteListNotifier<UnusedWebsite>([]))
         ],
         builder: (context, _) => GetMaterialApp(
               debugShowCheckedModeBanner: false,
