@@ -62,8 +62,14 @@ ThemeData darkTheme = ThemeData(
     hoverColor: MyColors.ctaLightDark,
     highlightColor: MyColors.ctaDarkDark,
     appBarTheme: AppBarTheme(
+        foregroundColor: MyColors.ctaDark,
         backgroundColor: MyColors.barDark,
-        titleTextStyle: TextStyle(color: MyColors.ctaDark)),
+        iconTheme: IconThemeData(color: MyColors.ctaDark),
+        centerTitle: true,
+        titleTextStyle: GoogleFonts.montserrat(
+            color: MyColors.ctaDark,
+            fontSize: 18,
+            fontWeight: FontWeight.w500)),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: MyColors.barDark,
         elevation: 20,
@@ -80,7 +86,12 @@ ThemeData darkTheme = ThemeData(
       hintStyle: GoogleFonts.montserrat(color: MyColors.grey[13]),
       labelStyle: GoogleFonts.montserrat(color: MyColors.grey[10]),
       errorStyle: GoogleFonts.montserrat(color: Colors.red),
-    ));
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+            primary: MyColors.ctaDark,
+            onPrimary: MyColors.ctaDark,
+            onSurface: MyColors.ctaDark)));
 
 final x = MaterialBasedCupertinoThemeData(materialTheme: darkTheme);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'addWebsite.dart';
 
 Widget floatingActionButton(BuildContext context) {
@@ -20,7 +21,6 @@ Widget floatingActionButton(BuildContext context) {
                 ]),
           ),
           onPressed: () {
-            showDialog(
-                context: context, builder: (context) => AddWebsitePopUp());
+            Get.to(() => AddWebsitePopUp(), fullscreenDialog: true, duration: Duration(seconds: 1));
           }));
 }

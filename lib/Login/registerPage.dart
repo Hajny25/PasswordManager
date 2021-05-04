@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       style: Theme.of(context).textTheme.button,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          Get.to(() => LoginPage());
+                                          Get.to(() => LoginPage()); // TODO change to Get.back() before publishing
                                         }),
                                 ])),
                       ],
@@ -157,7 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (status == AuthStatus.successful) {
       // move to User Menu
       await signUpSuccessful();
-      Get.off(() => UserMenu());
+      Get.offAll(() => UserMenu());
     } else {
       // show Error Popup
       final errorMsg = AuthExceptionHandler.generateExceptionMessage(status);

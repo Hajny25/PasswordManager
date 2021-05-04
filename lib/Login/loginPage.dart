@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         await user.reload();
       }
-      Get.off(() => UserMenu());
+      Get.offAll(() => UserMenu());
     } else {
       final errorMsg = AuthExceptionHandler.generateExceptionMessage(status);
       Get.dialog(alertDialog(context, errorMsg));
