@@ -10,7 +10,7 @@ class NavigationBar extends StatelessWidget {
     return BottomNavigationBar(
         currentIndex: this._currentIndex,
         onTap: (index) => callback(index),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.lock_shield, size: 28),

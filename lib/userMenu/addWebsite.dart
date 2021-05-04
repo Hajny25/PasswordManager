@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:password_manager/Firebase/authentication.dart';
-import 'package:password_manager/Firebase/database.dart';
+import 'package:get/get.dart';
 import 'package:password_manager/userMenu/passwordGenerator.dart';
-import 'package:password_manager/userMenu/websiteListWidget.dart';
 import 'package:password_manager/userMenu/websiteNotifier.dart';
 import 'package:password_manager/websites.dart';
 import 'package:password_manager/cupertinoHelpers.dart';
@@ -75,7 +72,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 30, right: 8),
-                      child: website.getImage(width: 30, height: 30),
+                      child: website.getImage(width: 20, height: 20),
                     ),
                     Text(
                       website.websiteName,
@@ -118,7 +115,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
         CupertinoDialogAction(
           child: Text("Cancel", style: Theme.of(context).textTheme.bodyText1),
           isDestructiveAction: true,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
         ),
         CupertinoDialogAction(
             child:
@@ -139,7 +136,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
       print(username);
       print(password);
       await this.addWebsite(unusedWebsite, username, password);
-      Navigator.pop(context);
+      Get.back();
     } else {
       showCupertinoDialog(
           context: context,
@@ -150,7 +147,7 @@ class _AddWebsitePopUpState extends State<AddWebsitePopUp> {
                   CupertinoDialogAction(
                     child: Text("Cancel"),
                     isDestructiveAction: true,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Get.back(),
                   )
                 ],
               ));

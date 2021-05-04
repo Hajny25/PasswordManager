@@ -2,10 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:password_manager/Firebase/database.dart' as database;
 import 'package:password_manager/themes/colors.dart';
-import 'package:password_manager/userMenu/websiteNotifier.dart';
-import 'package:provider/provider.dart';
 import '../sql/databaseHandler.dart';
 
 import '../websites.dart';

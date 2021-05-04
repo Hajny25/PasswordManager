@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager/userMenu/websiteNotifier.dart';
-
-import '../websites.dart';
 import 'addWebsite.dart';
 
 Widget floatingActionButton(BuildContext context) {
@@ -24,8 +21,6 @@ Widget floatingActionButton(BuildContext context) {
           ),
           onPressed: () {
             showDialog(
-                context: context,
-                builder: (context) => AddWebsitePopUp());
-          })
-      );
+                context: context, builder: (context) => AddWebsitePopUp());
+          }));
 }

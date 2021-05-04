@@ -1,11 +1,8 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_manager/Login/registerPage.dart';
 import 'package:password_manager/themes/darkTheme.dart';
-import 'package:password_manager/userMenu/userMenu.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +10,6 @@ import 'Login/loginPage.dart';
 import 'globals.dart' as Globals;
 import 'userMenu/websiteNotifier.dart';
 import 'websites.dart';
-import 'sql/databaseHandler.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -30,7 +26,6 @@ Future<void> main() async {
     }
   });
   runApp(MyApp());
-
 }
 
 Future<void> loadGlobals() async {
@@ -53,7 +48,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Password Manager',
               theme: darkTheme,
-              home: RegisterPage(), //WebsiteClose(Website("Google", 0)),
+              home: LoginPage(), //WebsiteClose(Website("Google", 0)),
             ));
   }
 }

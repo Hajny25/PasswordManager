@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager/imageUpdatesHandler.dart';
 import 'dart:io';
 import 'globals.dart' as Globals;
 

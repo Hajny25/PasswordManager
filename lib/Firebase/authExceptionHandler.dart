@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager/main.dart';
 import "package:get/get.dart";
 
 enum AuthStatus {
@@ -81,44 +80,31 @@ class AuthExceptionHandler {
   }
 }
 
-void showAlertDialog(String msg) {
-  showDialog(
-      context: navigatorKey.currentContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Authentication Error"),
-          content: Text(msg),
-          actions: <Widget>[
-            OutlinedButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            side: BorderSide(color: Colors.blue)))))
-          ],
-        );
-      });
-}
-
-Widget alertDialog(String msg) {
+Widget alertDialog(BuildContext context, String msg) {
   return AlertDialog(
     title: Text("Authentication Error"),
-    content: Text(msg),
+    backgroundColor: Theme.of(context).cardColor,
+    content: Text(msg, style: Theme.of(context).textTheme.bodyText1),
     actions: <Widget>[
-      OutlinedButton(
-          child: Text("OK"),
-          onPressed: () {
-            Get.back();
-          },
-          style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: Colors.blue)))))
+      Align(
+        alignment: Alignment.center,
+        child: OutlinedButton(
+            child: Text(
+              "OK",
+              style: Theme.of(context).textTheme.button,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            style:  OutlinedButton.styleFrom(
+                                primary: Theme.of(context).accentColor,   
+                                backgroundColor: Colors.transparent,
+                                side: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                    width: 1),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+      ))
     ],
   );
 }

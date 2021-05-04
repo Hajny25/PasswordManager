@@ -157,12 +157,12 @@ class _RegisterPageState extends State<RegisterPage> {
     if (status == AuthStatus.successful) {
       // move to User Menu
       await signUpSuccessful();
-      Get.to(() => UserMenu());
+      Get.off(() => UserMenu());
     } else {
       // show Error Popup
       final errorMsg = AuthExceptionHandler.generateExceptionMessage(status);
       print("Ready to show dialog.");
-      Get.to(() => alertDialog(errorMsg));
+      Get.dialog(alertDialog(context, errorMsg));
     }
   }
 }
